@@ -24,7 +24,7 @@ class Development(Configuration):
     # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
     # SECURITY WARNING: keep the secret key used in production secret!
-    SECRET_KEY = 'django-insecure-_7y(j1y^zp%b1bl+&*n-a$$=*wwhxl45t%5^y)o2q4jr)jz-xp'
+    SECRET_KEY = values.Value(environ_name='DJANGO_SECRET_KEY')
 
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
