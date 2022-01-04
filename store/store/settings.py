@@ -24,7 +24,8 @@ class Development(Configuration):
     # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
     # SECURITY WARNING: keep the secret key used in production secret!
-    SECRET_KEY = values.Value(environ_name='DJANGO_SECRET_KEY')
+    # SECRET_KEY = values.Value(environ_name='DJANGO_SECRET_KEY')
+    SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
@@ -87,11 +88,11 @@ class Development(Configuration):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': values.Value(environ_name='DB_NAME'),
-            'USER': values.Value(environ_name='DB_USER'),
-            'PASSWORD': values.Value(environ_name='DB_PASSWORD'),
-            'HOST': values.Value(environ_name='DB_HOST'),
-            'PORT': values.Value(environ_name='DB_PORT'),
+            'NAME': os.environ.get("TEST_DB_NAME"),
+            'USER': os.environ.get("DB_USER"),
+            'PASSWORD': os.environ.get("DB_PASSWORD"),
+            'HOST': os.environ.get("DB_HOST"),
+            'PORT': os.environ.get("DB_PORT"),
         }
     }
 
