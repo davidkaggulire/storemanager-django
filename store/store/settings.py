@@ -47,6 +47,7 @@ class Development(Configuration):
         'djmoney',
         'django_extensions',
         'products.apps.ProductsConfig',
+        'category.apps.CategoryConfig',
         'rest_framework',
     ]
 
