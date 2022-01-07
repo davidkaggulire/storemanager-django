@@ -1,4 +1,4 @@
-# product views 
+# product views
 
 from rest_framework import generics, status
 from rest_framework.response import Response
@@ -13,9 +13,26 @@ class ProductListCreate(generics.ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response({"product":serializer.data}, status=status.HTTP_201_CREATED, headers=headers)
+
+        print(serializer.validated_data['name'])
+        input_name = serializer.validated_data['name']
+
+        product_list = Product.objects.filter(
+                name=input_name.title())
+
+        if not product_list:
+            serializer.validated_data['name'] = input_name.title()
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response({
+                "product": serializer.data
+                }, status=status.HTTP_201_CREATED, headers=headers)
+        else:
+            headers = self.get_success_headers(serializer.data)
+            return Response({
+                "message": "product already exists",
+                "product": serializer.data
+                }, status=status.HTTP_200_OK, headers=headers)
 
 
 class ProductRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
@@ -34,7 +51,8 @@ class ProductRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer = self.get_serializer(
+            instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data, status=status.HTTP_200_OK)
