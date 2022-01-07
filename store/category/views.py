@@ -13,9 +13,26 @@ class CategoryListCreate(generics.ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response({"category":serializer.data}, status=status.HTTP_201_CREATED, headers=headers)
+
+        print(serializer.validated_data['name'])
+        input_name = serializer.validated_data['name']
+
+        category_list = Category.objects.filter(
+                name=input_name.title())
+
+        if not category_list:
+            serializer.validated_data['name'] = input_name.title()
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response({
+                "category": serializer.data
+                }, status=status.HTTP_201_CREATED, headers=headers)
+        else:
+            headers = self.get_success_headers(serializer.data)
+            return Response({
+                "message": "category already exists",
+                "product": serializer.data
+                }, status=status.HTTP_200_OK, headers=headers)
 
 
 class CategoryRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
