@@ -13,3 +13,6 @@ class Product(models.Model):
     quantity = models.IntegerField()
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        return self.name
